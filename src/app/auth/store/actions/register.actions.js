@@ -2,6 +2,7 @@ import firebaseService from 'app/services/firebaseService';
 import jwtService from 'app/services/jwtService';
 import * as Actions from 'app/store/actions';
 import * as UserActions from './user.actions';
+import ZContacts from '../../../services/zohoService/contacts/index';
 
 export const REGISTER_ERROR = 'REGISTER_ERROR';
 export const REGISTER_SUCCESS = 'REGISTER_SUCCESS';
@@ -37,6 +38,22 @@ export function registerWithFirebase(model) {
 
 		return () => false;
 	}
+
+	const fullname = model.displayName.split(' ');
+	const zPayload = {
+		Email: model.email,
+		First_Name: fullname[0],
+		Last_Name: fullname.length > 1 ? fullname[1] : '' 
+	};
+
+	const zoho = new ZContacts();
+	const dataCriteria = zoho.getContactByEmail(zPayload.Email).then(response => {
+		if (response) {
+			zoho.updateContacts(zPayload, response.data[0].id);
+		} else {
+			zoho.createContacts(zPayload);
+		}
+	});
 
 	const { email, password, displayName } = model;
 	return dispatch =>
