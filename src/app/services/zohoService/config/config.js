@@ -14,7 +14,6 @@ export default class Config {
 	async getToken() {
 		return firebaseService.getZohoCredentials().then(zoho => {
 			if (new Date(zoho.expiresIn) < new Date()) {
-				console.log('updated');
 				let date = new Date();
 				date.setMinutes(date.getMinutes() + 60);
 				firebaseService.setZohoValue('expiresIn', date.toString()).then(response => {
