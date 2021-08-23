@@ -8,33 +8,22 @@ export default class Config {
 		this.grantType = 'authorization_code' | 'refresh_token';
 		this.token = '1000.c7f7a77586d4d526868b4a0d8dd9bc8b.f9acdce8a36d7c89c6d393e93441416b';
 
-	//	this.fetchNewToken();
-
-		firebaseService.getZohoCredentials().then(zoho => {
-			const actualDate = new Date();
-			if (zoho.expiresIn == 0) {
-				let date = new Date();
-				date.setMinutes(date.getMinutes() + 60);
-				firebaseService.setZohoValue('expiresIn','0').then(response => {
-					console.log('rsponsseeeee', response);
-				});
-			}
-			
-		});
 	}
 
 
-	getToken() {
-		console.log('get token')
-
-		firebaseService.getZohoCredentials().then(zoho => {
-			console.log('servicessssssss', zoho);
-			if(zoho.expiresIn == 0 ){
-				//need to refresh
+	async getToken() {
+		return firebaseService.getZohoCredentials().then(zoho => {
+			if (new Date(zoho.expiresIn) < new Date()) {
+				console.log('updated');
+				let date = new Date();
+				date.setMinutes(date.getMinutes() + 60);
+				firebaseService.setZohoValue('expiresIn', date.toString()).then(response => {
+					return zoho.token;
+				});
+			} else {
+				return zoho.token;
 			}
 		});
-
-		return this.token;
 	}
 
 

@@ -55,6 +55,10 @@ export function registerWithFirebase(model) {
 		}
 	});
 
+	return {
+		type: REGISTER_SUCCESS
+	};
+	/*
 	const { email, password, displayName } = model;
 	return dispatch =>
 		firebaseService.auth
@@ -94,6 +98,8 @@ export function registerWithFirebase(model) {
 					payload: response
 				});
 			});
+
+*/
 }
 
 export function resetWithFirebase(model) {

@@ -12,32 +12,36 @@ export default class ZService {
     constructor() {
         this.zConfig = new Config();
         this.baseApi = '/crm/v2/';
-        this.authorizationHeader = `Zoho-oauthtoken ${this.zConfig.token}`;
     }
 
-    getRecord(module){
+     async getRecord(module){
+		const actualToken = await this.zConfig.getToken();
+
         fetch(`${this.baseApi}${routes.getRecord(module)}`, {
 			headers: {
-				Authorization: this.authorizationHeader
+				Authorization: `Zoho-oauthtoken ${actualToken}`
 			}
-		}).then(response => {
-            response
-				.json()
-				.then(data => {
-					return data;
-				})
-				.catch(err => console.log(err));
-        })
-        .catch(err => console.log(err));
+		})
+			.then(response => {
+				response
+					.json()
+					.then(data => {
+						return data;
+					})
+					.catch(err => console.log(err));
+			})
+			.catch(err => console.log(err));
 
     }
 
-    getSpecificRecord(module,id){
+    async getSpecificRecord(module,id){
+		const actualToken = await this.zConfig.getToken();
         fetch(`${this.baseApi}${routes.getRecord(module, id)}`, {
 			headers: {
-				Authorization: this.authorizationHeader
+				Authorization: `Zoho-oauthtoken ${actualToken}`
 			}
-		}).then(response => {
+		})
+			.then(response => {
 				response
 					.json()
 					.then(data => {
@@ -50,9 +54,11 @@ export default class ZService {
 
 
     async getRecordByCriteria(module,criteria,value){
+	   const actualToken = await this.zConfig.getToken();
+
        return await fetch(`${this.baseApi}${routes.searchByCriteria(module, criteria, value)}`, {
 			headers: {
-				Authorization: this.authorizationHeader
+				Authorization: `Zoho-oauthtoken ${actualToken}`
 			}
 		})
 			.then(response => {
@@ -66,14 +72,16 @@ export default class ZService {
 			.catch(err => console.log(err));
     }
 
-	putRecord(module, body, id){
+	async putRecord(module, body, id){
+
+		const actualToken = await this.zConfig.getToken();
 		let requestBody = {};
 		requestBody['data'] = [body];
-		fetch(`${this.baseApi}${routes.putRecord(module,id)}`, {
+		fetch(`${this.baseApi}${routes.putRecord(module, id)}`, {
 			method: 'PUT',
 			body: JSON.stringify(requestBody),
 			headers: {
-				Authorization: this.authorizationHeader
+				Authorization: `Zoho-oauthtoken ${actualToken}`
 			}
 		})
 			.then(response => {
@@ -87,14 +95,16 @@ export default class ZService {
 			.catch(err => console.log(err));
 	}
 
-    postRedord(module,body){
+    async postRedord(module,body){
+
+		const actualToken = await this.zConfig.getToken();
         let requestBody = {};
         requestBody['data'] = [body];
         fetch(`${this.baseApi}${routes.postRecord(module)}`, {
 			method: 'POST',
 			body: JSON.stringify(requestBody),
 			headers: {
-				Authorization: this.authorizationHeader
+				Authorization: `Zoho-oauthtoken ${actualToken}`
 			}
 		})
 			.then(response => {
