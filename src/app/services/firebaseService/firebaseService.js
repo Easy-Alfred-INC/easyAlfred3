@@ -47,6 +47,30 @@ class FirebaseService {
 		});
 	};
 
+
+	getZohoCredentials(){
+		if (!firebase.apps.length) {
+			return false;
+		}
+		return new Promise((resolve, reject) => {
+			this.db
+				.ref(`zoho`)
+				.once('value')
+				.then(snapshot => {
+					console.log(snapshot);
+					const service = snapshot.val();
+					resolve(service);
+				});
+		});
+	}
+
+	setZohoValue(module,value){
+		if (!firebase.apps.length) {
+			return false;
+		}
+		return this.db.ref(`zoho/${module}`).set(value);
+	}
+
 	updateServices = service => {
 		const LAST_UPDATED = moment().format()
 		if (!firebase.apps.length) {

@@ -19,8 +19,9 @@ import Icon from '@material-ui/core/Icon';
 import moment from 'moment';
 import React, { useCallback, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import * as Actions from 'app/auth/store/actions';
+import * as Actions from 'app/auth/store/actions'; 
 import { handleCostColumn } from 'app/services/helper.js';
+import ZDeals from 'app/services/zohoService/leads'
 
 const defaultFormState = {
 	id: FuseUtils.generateGUID(),
@@ -175,12 +176,32 @@ function EventDialog(props) {
 		form.start = moment(form.start)
 		form.end = moment(form.end)
 		event.preventDefault();
-		// console.log('form', form)
-		// console.log('eventDialog.fromAdmin', eventDialog.fromAdmin)
+
+		const zPayload = {
+			Deal_Name: `${tripData.displayName} - ${tripData.locationName}`,
+			Stage: 'Qualification',
+			Business_or_Consumer: 'B2B',
+			Closing_Date: form.end.format('YYYY-MM-DD'),
+			Pipeline: 'Consumer Pipeline',
+			Account_Name: tripData.locationName,
+			//Service_start_Date_Time: form.start.format('yyyy-mm-dd HH:mm:ss') + '+06:00',
+			Description: form.desc,
+			Party_Size_for_Event: form.guestCount,
+			Hours: form.hourCount,
+			Budget1: form.budget,
+			Amount: form.guestCount != '' ? (parseInt(form.guestCount) * parseInt(form.budget)).toString() : form.budget
+		};
+
+		console.log(zPayload,'payload')
+
 		if (eventDialog.fromAdmin) {
 			closeComposeDialog();
+			const zoho = new ZDeals();
+			zoho.createDeal(zPayload);
 			dispatch(Actions.addEventFromAdmin(form));
 		} else {
+			const zoho = new ZDeals();
+			zoho.createDeal(zPayload);
 			dispatch(Actions.addEvent(form));
 		}
 		// closeComposeDialog();
