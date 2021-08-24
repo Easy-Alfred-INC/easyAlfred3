@@ -48,17 +48,17 @@ export function registerWithFirebase(model) {
 
 	const zoho = new ZContacts();
 	const dataCriteria = zoho.getContactByEmail(zPayload.Email).then(response => {
-		if (response) {
-			zoho.updateContacts(zPayload, response.data[0].id);
-		} else {
-			zoho.createContacts(zPayload);
-		}
+			if (response) {
+				zoho.updateContacts(zPayload, response.data[0].id);
+			} else {
+				zoho.createContacts(zPayload);
+			}
 	});
 
 	return {
 		type: REGISTER_SUCCESS
 	};
-	
+	/*
 	const { email, password, displayName } = model;
 	return dispatch =>
 		firebaseService.auth
@@ -99,7 +99,7 @@ export function registerWithFirebase(model) {
 				});
 			});
 
-
+*/
 }
 
 export function resetWithFirebase(model) {
