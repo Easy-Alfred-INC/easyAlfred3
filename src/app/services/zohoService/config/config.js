@@ -4,8 +4,8 @@ import axios from 'axios';
 export default class Config {
 	constructor() {
 		this.redirect_uri = 'http://localhost/callback&grant_type'
-		this.clientId = '1000.7IG3MM1UVJLAIUCISKGJ8FMC45JELW'; // sandbox 1000.7IG3MM1UVJLAIUCISKGJ8FMC45JELW
-		this.clientSecret = '92e562bfb1ccb78a43417787a3ef012c3ee008b71b'; // sandbox 92e562bfb1ccb78a43417787a3ef012c3ee008b71b
+		this.clientId = '1000.7IG3MM1UVJLAIUCISKGJ8FMC45JELW'; 
+		this.clientSecret = '92e562bfb1ccb78a43417787a3ef012c3ee008b71b'; 
 		this.grantType = 'authorization_code' | 'refresh_token';
 	}
 
